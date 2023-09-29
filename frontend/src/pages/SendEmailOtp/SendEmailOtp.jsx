@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { getItem } from '../../../localStorage/getItem'
+import React, { useEffect, useState } from 'react';
+import { getItem } from '../../../localStorage/getItem';
+import { setItem } from '../../../localStorage/setItem';
 import axios from 'axios';
 import SendOtp from '../../components/SendOtp/SendOtp';
 import { URL } from '../../url';
@@ -47,7 +48,8 @@ const SendEmailOtp = () => {
                     toast.success(res.data.message, {
                         position: toast.POSITION.BOTTOM_CENTER
                     });
-                    
+                    userData.sendEmail = true;
+                    setItem('user',userData);
                     // Dispatch an action to indicate a successful email OTP send
                     dispatch({ type: USER.SEND_EMAIL_OTP_SUCCESS });
 

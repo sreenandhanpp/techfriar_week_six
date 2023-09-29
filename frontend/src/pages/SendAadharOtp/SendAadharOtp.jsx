@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { getItem } from '../../../localStorage/getItem';
-import { setItem } from '../../../localStorage/setItem';
+import React, { useEffect, useState } from 'react'
+import { getItem } from '../../../localStorage/getItem'
 import axios from 'axios';
 import SendOtp from '../../components/SendOtp/SendOtp';
 import { URL } from '../../url';
@@ -11,9 +10,10 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
 import 'react-toastify/dist/ReactToastify.css';
 import { maskPhone } from '../../utils/maskPhone';
+import { maskedAadhar } from '../../utils/maskAadhar';
 
 
-const SendPhoneOtp = () => {
+const SendAadharOtp = () => {
     const [msg, setMsg] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -26,8 +26,8 @@ const SendPhoneOtp = () => {
 
     // Use the useEffect hook to process user email data and generate a masked email message.
     useEffect(() => {
-        let maskedPhone = maskPhone(userData.phone);
-        let text = `Click the send button to recieve otp to ${maskedPhone}`;
+        let maskedAadhar = maskedAadhar(userData.phone);
+        let text = `Click the send button to recieve otp to ${maskedAadhar}`;
         setMsg(text);
     }, []);
 
@@ -39,18 +39,15 @@ const SendPhoneOtp = () => {
             dispatch({ type: USER.SEND_PHONE_OTP_REQUEST });
 
             // Send a POST request to the server to send an email OTP
-            axios.post(URL + '/send-phone-otp', {
+            axios.post(URL + '/send-aadhar-otp', {
                 id: userData.id,
-                phone: userData.phone
+                phone: userData.aadhar
             }).then(res => {
                 if (res.status == 200) {
                     // Display a success message to the user
                     toast.success(res.data.message, {
                         position: toast.POSITION.BOTTOM_CENTER
                     });
-
-                    userData.sendPhone = true;
-                    setItem('user',userData);
 
                     // Dispatch an action to indicate a successful email OTP send
                     dispatch({ type: USER.SEND_PHONE_OTP_SUCCESS });
@@ -88,4 +85,4 @@ const SendPhoneOtp = () => {
     )
 }
 
-export default SendPhoneOtp
+export default SendAadharOtp

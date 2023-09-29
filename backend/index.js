@@ -10,6 +10,7 @@ const signupValidator = require('./middlewares/signupValidator.js');
 const { validationResult } = require('express-validator');
 const phoneValidator = require('./middlewares/phoneValidator.js');
 const aadharValidator = require('./middlewares/aadharValidator.js');
+const { default: axios } = require('axios');
 
 
 //compiling .env file
@@ -44,8 +45,8 @@ app.post('/signup', signupValidator, (req, res) => {
     const err = validationResult(req);
     if (!err.isEmpty()) {
         let errors = err.array()
-        let error = JSON.stringify(errors);
-        res.status(401).json({ error });
+        // let error = JSON.stringify(errors);
+        res.status(401).json({ error:errors });
     } else {
         helpers.doSignup(req.body).then(resp => {
             const data = JSON.stringify(resp);
@@ -138,12 +139,45 @@ app.post('/resend-phone-otp', (req, res) => {
 //Aadhar verification 
 
 app.post('/aadhar', (req, res) => {
-    const err = validationResult(req);
-    if (!err.isEmpty()) {
-        res.status(400).json({ error: err.array() });
-    } else {
-        res.status(200).json({ message: "Verified Successfully" });
-    }
+    // uidai.js
+
+// const uidaiApi = require('uidai-api');
+
+// const uidai = new uidaiApi({
+//   appId: 'YOUR_APP_ID',
+//   secretKey: 'YOUR_SECRET_KEY'
+// });
+
+// // Get the Aadhaar-linked mobile number
+// async function getAadhaarLinkedMobileNumber(aadhaarNumber) {
+//   const ekycData = await uidai.getEkycData(aadhaarNumber);
+//   return ekycData.mobileNumber;
+// }
+
+// // index.js
+
+// const express = require('express');
+// const uidai = require('./uidai');
+
+// const app = express();
+
+// app.get('/', (req, res) => {
+//   res.send('<h1>UIDAI API Example</h1>');
+// });
+
+// app.get('/get-aadhaar-linked-mobile-number', (req, res) => {
+//   const aadhaarNumber = req.query.aadhaarNumber;
+
+//   uidai.getAadhaarLinkedMobileNumber(aadhaarNumber).then(mobileNumber => {
+//     res.send(`Your Aadhaar-linked mobile number is ${mobileNumber}.`);
+//   }).catch(err => {
+//     res.status(500).send(err.message);
+//   });
+// });
+
+// app.listen(3000, () => {
+//   console.log('Server listening on port 3000');
+// });
 });
 
 //function to start the server

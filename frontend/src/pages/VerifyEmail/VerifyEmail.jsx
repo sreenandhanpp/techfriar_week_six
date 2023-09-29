@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getItem } from '../../../localStorage/getItem';
+import { setItem } from '../../../localStorage/setItem';
 import Verfy from '../../components/Verify/Verfy';
 import './style.css'
 import { maskEmail } from '../../utils/maskEmail';
@@ -39,38 +40,55 @@ const VerifyEmail = () => {
     setMsg(text);
   }, []);
 
+  const HandleValidation = () => {
+    const otpRegex = /^\d{4}$/;
+    const otp = otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour;
+    if (!otpRegex.test(otp)) {
+      setColor('red');
+      setMsg("otp must be four digit,check your inbox");
+      return true;
+    }
+  }
+
   // Handle the user's request to verify an OTP (One-Time Password) for email.
   const HandleVerify = (e) => {
     e.preventDefault();
+    const isErr = HandleValidation();
 
-    // Dispatch an action to indicate the OTP verification request is in progress
-    dispatch({ type: USER.VERIFY_OTP_REQUEST });
+    if (!isErr) {
 
-    // Send a POST request to the server to verify the email OTP  
-    axios.post(URL + '/verify-email-otp', {
-      id: userData.id,
-      otp: otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour
-    }).then(res => {
+      // Dispatch an action to indicate the OTP verification request is in progress
+      dispatch({ type: USER.VERIFY_OTP_REQUEST });
 
-      // Dispatch an action to indicate a successful OTP verification
-      dispatch({ type: USER.VERIFY_OTP_SUCCESS, payload: res.data.message });
+      // Send a POST request to the server to verify the email OTP  
+      axios.post(URL + '/verify-email-otp', {
+        id: userData.id,
+        otp: otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour
+      }).then(res => {
 
-      // Display a success message to the user
-      toast.success(res.data.message, {
-        position: toast.POSITION.BOTTOM_CENTER
+        userData.emailVerified = true;
+        setItem('user',userData);
+
+        // Dispatch an action to indicate a successful OTP verification
+        dispatch({ type: USER.VERIFY_OTP_SUCCESS, payload: res.data.message });
+
+        // Display a success message to the user
+        toast.success(res.data.message, {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
+
+        // Navigate the user to the '/send-phone' route upon successful verification
+        navigate('/send-phone');
+      }).catch(err => {
+
+        // Dispatch an action to indicate a failed OTP verification
+        dispatch({ type: USER.VERIFY_OTP_FAILED, error: err.response.data.message });
+
+        // Set the color to red and display an error message
+        setColor('red');
+        setMsg(err.response.data.error);
       });
-
-      // Navigate the user to the '/send-phone' route upon successful verification
-      navigate('/send-phone');
-    }).catch(err => {
-
-      // Dispatch an action to indicate a failed OTP verification
-      dispatch({ type: USER.VERIFY_OTP_FAILED, error: err.response.data.message });
-
-      // Set the color to red and display an error message
-      setColor('red');
-      setMsg(err.response.data.error);
-    });
+    }
   }
 
   // Handle the user's request to resend an OTP (One-Time Password) via email.

@@ -1,6 +1,7 @@
 import React from 'react'
+import Alert from '../Alert/Alert'
 
-const InuptField = ({ label, placeholder, type, setData }) => {
+const InuptField = ({ name, msg, label, HandleChange, placeholder, type, }) => {
     return (
         <div className="input-box">
             <label>{label}</label>
@@ -8,8 +9,14 @@ const InuptField = ({ label, placeholder, type, setData }) => {
                 required
                 placeholder={placeholder}
                 type={type}
-                onChange={e => setData(e.target.value)}
+                onChange={HandleChange}
+                name={name}
             />
+
+            {
+                msg && <Alert msg={msg} />
+            }
+
         </div>
     )
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getItem } from '../../../localStorage/getItem';
+import { setItem } from '../../../localStorage/setItem';
 import Verfy from '../../components/Verify/Verfy';
 import { maskPhone } from '../../utils/maskPhone';
 import { URL } from '../../url';
@@ -21,10 +22,11 @@ const VerifyPhone = () => {
   });
   const [color, setColor] = useState('');
   const dispatch = useDispatch();
-  const navigate =  useNavigate();
+  const navigate = useNavigate();
 
   // Handle changes in input fields by updating the OTP (One-Time Password) state.
   const HandleChange = (e) => {
+
 
     // Update the OTP state using the spread operator to maintain previous values
     setOtps((prev) => {
@@ -41,38 +43,53 @@ const VerifyPhone = () => {
     setMsg(text);
   }, []);
 
+  const HandleValidation = () => {
+    const otpRegex = /^\d{4}$/;
+    const otp = otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour;
+    if (!otpRegex.test(otp)) {
+      setMsg("otp must be four digit,check your inbox");
+      return true;
+    }
+  }
   // Handle the user's request to verify an OTP (One-Time Password) for phone.
   const HandleVerify = (e) => {
     e.preventDefault();
-    console.log(otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour)
-    // Dispatch an action to indicate the OTP verification request is in progress
-    dispatch({ type: USER.VERIFY_OTP_REQUEST });
+    const isErr = HandleValidation();
 
-    // Send a POST request to the server to verify the email OTP  
-    axios.post(URL + '/verify-phone-otp', {
-      id: userData.id,
-      otp: otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour
-    }).then(res => {
-      console.log(res)
-      // Dispatch an action to indicate a successful OTP verification
-      dispatch({ type: USER.VERIFY_OTP_SUCCESS, payload: res.data.message });
+    if (!isErr) {
 
-      // Display a success message to the user
-      toast.success(res.data.message, {
-        position: toast.POSITION.BOTTOM_CENTER
+      // Dispatch an action to indicate the OTP verification request is in progress
+      dispatch({ type: USER.VERIFY_OTP_REQUEST });
+
+      // Send a POST request to the server to verify the email OTP  
+      axios.post(URL + '/verify-phone-otp', {
+        id: userData.id,
+        otp: otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour
+      }).then(res => {
+
+        userData.phoneVerified = true;
+        setItem('user', userData);
+
+        // Dispatch an action to indicate a successful OTP verification
+        dispatch({ type: USER.VERIFY_OTP_SUCCESS, payload: res.data.message });
+
+        // Display a success message to the user
+        toast.success(res.data.message, {
+          position: toast.POSITION.BOTTOM_CENTER
+        });
+
+        // Navigate the user to the '/send-aadhar' route upon successful verification
+        navigate('/send-aadhar');
+      }).catch(err => {
+        console.log(err)
+        // Dispatch an action to indicate a failed OTP verification
+        dispatch({ type: USER.VERIFY_OTP_FAILED, error: err.response.data.message });
+
+        // Set the color to red and display an error message
+        setColor('red');
+        setMsg(err.response.data.message);
       });
-
-      // Navigate the user to the '/send-aadhar' route upon successful verification
-      navigate('/send-aadhar');
-    }).catch(err => {
-      console.log(err)
-      // Dispatch an action to indicate a failed OTP verification
-      dispatch({ type: USER.VERIFY_OTP_FAILED, error: err.response.data.message });
-
-      // Set the color to red and display an error message
-      setColor('red');
-      setMsg(err.response.data.message);
-    });
+    }
   }
 
   // Handle the user's request to resend an OTP (One-Time Password) via email.
@@ -87,7 +104,7 @@ const VerifyPhone = () => {
       id: userData.id,
       phone: userData.phone
     }).then(res => {
-      console.log(res)
+
       // Dispatch an action to indicate a successful OTP resend
       dispatch({ type: USER.RESEND_OTP_SUCCESS, payload: res.data.message });
 
