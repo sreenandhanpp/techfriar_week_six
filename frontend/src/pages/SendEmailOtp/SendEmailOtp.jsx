@@ -36,7 +36,7 @@ const SendEmailOtp = () => {
         e.preventDefault();
         try {
             // Dispatch an action to indicate the request is in progress
-            dispatch({ type: USER.SEND_EMAIL_OTP_REQUEST });
+            dispatch({ type: USER.SEND_OTP_REQUEST });
 
             // Send a POST request to the server to send an email OTP
             axios.post(URL + '/send-email-otp', {
@@ -54,14 +54,14 @@ const SendEmailOtp = () => {
                     setItem('user', userData);
 
                     // Dispatch an action to indicate a successful email OTP send
-                    dispatch({ type: USER.SEND_EMAIL_OTP_SUCCESS });
+                    dispatch({ type: USER.SEND_OTP_SUCCESS });
 
                     // Redirecting to verify email page using useNavigate hook
                     navigate('/verify-email');
                 }
             }).catch(err => {
                 // Dispatch an action to indicate a failed email OTP send
-                dispatch({ type: USER.SEND_EMAIL_OTP_FAILED });
+                dispatch({ type: USER.SEND_OTP_FAILED });
 
                 // Display an error message to the user
                 toast.error(err.data.message, {
@@ -71,7 +71,7 @@ const SendEmailOtp = () => {
             });
         } catch (error) {
             // Dispatch an action to indicate a failed email OTP send
-            dispatch({ type: USER.SEND_EMAIL_OTP_FAILED });
+            dispatch({ type: USER.SEND_OTP_FAILED });
 
             // Display a generic error message to the user
             toast.error("Somthing went wrong", {

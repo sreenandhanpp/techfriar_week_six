@@ -187,5 +187,34 @@ module.exports = {
             }
         })
     },
+    //To find One user details,then resolve the data
+    getUserDetails: ({ id }) => {
+        return new Promise(async (resolve, reject) => {
+            //matching the user id with mongodb object id 
+            newUser.findOne({ _id: new ObjectId(id) }).lean().then((user) => {
+                resolve(user);
+            }).catch(err => {
+                reject(err);
+            })
+        })
+    },
+    //To find One user details,then resolve the data
+    updateUserDetails: ( { id,dob,name,email,aadhar,phone } ) => {
+        return new Promise(async (resovle, reject) => {
+            newUser.updateOne({ _id: new ObjectId(id) }, {
+                $set: {
+                    dob: dob,
+                    aadhar: aadhar,
+                    phone: phone,
+                    name: name,
+                    email: email,
+                }
+            }).then((res) => {
+                resovle(res);
+            }).catch(err => {
+                reject(err)
+            })
+        });
+    },
 
 }

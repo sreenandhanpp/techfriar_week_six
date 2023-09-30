@@ -12,22 +12,25 @@ import { VerifyEmailAuth } from './components/VerifyEmalAuth/VerifyEmailAuth';
 import { VerifyPhoneAuth } from './components/VerifyPhoneAuth/VerifyPhoneAuth';
 import { VerifyAadharAuth } from './components/VerifyAadharAuth/VerifyAadharAuth';
 import { HomeAuth } from './components/HomeAuth/HomeAuth';
+import UpdateUser from './pages/UpdateUser/UpdateUser';
+import { UpdateAuth } from './components/updateAuth/UpdateAuth';
 
 
 function App() {
   return (
     <>
       <Routes>
-        <Route exact path='/send-email' element={<EmailAuth >  <SendEmailOtp /> </EmailAuth>} />
-        <Route exact path='/send-phone' element={<PhoneAuth > <SendPhoneOtp /> </PhoneAuth>} />
-        <Route exact path='/verify-email' element={<VerifyEmailAuth> <VerifyEmail /> </VerifyEmailAuth>} />
-        <Route exact path='/verify-phone' element={<VerifyPhoneAuth>  <VerifyPhone /> </VerifyPhoneAuth>} />
-        <Route exact path='/verify-aadhar' element={<VerifyAadharAuth>  <VerifyAadhar /> </VerifyAadharAuth>} />
-        <Route exact path='/signup' element={<Signup />} />
-        <Route exact path='/' element={<HomeAuth>  <Home /> </HomeAuth>} />
-      </Routes>
+        <Route exact path='/update' element={<UpdateAuth> <UpdateUser />  </UpdateAuth >} />
+          <Route exact path='/send-email' element={<EmailAuth >  <SendEmailOtp /> </EmailAuth>} />
+          <Route exact path='/send-phone' element={<PhoneAuth > <SendPhoneOtp /> </PhoneAuth>} />
+          <Route exact path='/verify-email' element={<VerifyEmailAuth> <VerifyEmail /> </VerifyEmailAuth>} />
+          <Route exact path='/verify-phone' element={<VerifyPhoneAuth>  <VerifyPhone /> </VerifyPhoneAuth>} />
+          <Route exact path='/verify-aadhar' element={<VerifyAadharAuth>  <VerifyAadhar /> </VerifyAadharAuth>} />
+          <Route exact path='/signup' element={<Signup />} />
+          <Route exact path='/' element={<HomeAuth>  <Home /> </HomeAuth>} />
+        </Routes>
     </>
-  )
+      )
 }
 
-export default App
+      export default App

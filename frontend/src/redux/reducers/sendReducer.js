@@ -4,17 +4,15 @@ import {setItem} from "../../../localStorage/setItem"
 let initialState = {
     loading:false,
     error:"",
-    data:null
 }
 
-export const pincodeReducer = (state = initialState,action) => {
+export const sendReducer = (state = initialState,action) => {
     switch(action.type){
-        case USER.FETCH_PIN_DETAILS_REQUEST:
+        case USER.SEND_OTP_REQUEST:
             return { ...state, loading:true}
-        case USER.FETCH_PIN_DETAILS_SUCCESS:
-            setItem('pincode',action.payload)
-            return { ...state,loading: false,data: action.payload }
-        case USER.FETCH_PIN_DETAILS_FAILED:
+        case USER.SEND_OTP_SUCCESS:
+            return { ...state,loading: false }
+        case USER.AADHAR_VERIFY_FAILED:
             return { ...state,loading: false,error: action.payload }
         default:
             return state

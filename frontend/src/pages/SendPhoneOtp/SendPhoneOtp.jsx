@@ -36,7 +36,7 @@ const SendPhoneOtp = () => {
         e.preventDefault();
         try {
             // Dispatch an action to indicate the request is in progress
-            dispatch({ type: USER.SEND_PHONE_OTP_REQUEST });
+            dispatch({ type: USER.SEND_OTP_REQUEST });
 
             // Send a POST request to the server to send an phone OTP
             axios.post(URL + '/send-phone-otp', {
@@ -54,14 +54,14 @@ const SendPhoneOtp = () => {
                     setItem('user', userData);
 
                     // Dispatch an action to indicate a successful email OTP send
-                    dispatch({ type: USER.SEND_PHONE_OTP_SUCCESS });
+                    dispatch({ type: USER.SEND_OTP_SUCCESS });
 
                     // Redirecting to verify phone page using useNavigate hook
                     navigate('/verify-phone');
                 }
             }).catch(err => {
                 // Dispatch an action to indicate a failed phone OTP send
-                dispatch({ type: USER.SEND_PHONE_OTP_FAILED });
+                dispatch({ type: USER.SEND_OTP_FAILED });
 
                 // Display an error message to the user
                 toast.error(err.data.message, {
@@ -71,7 +71,7 @@ const SendPhoneOtp = () => {
             });
         } catch (error) {
             // Dispatch an action to indicate a failed phone OTP send
-            dispatch({ type: USER.SEND_PHONE_OTP_FAILED });
+            dispatch({ type: USER.SEND_OTP_FAILED });
 
             // Display a generic error message to the user
             toast.error("Somthing went wrong", {

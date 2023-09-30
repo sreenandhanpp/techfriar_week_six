@@ -56,12 +56,12 @@ const SendEmailOtp = () => {
           navigate('/');
         }
       }).catch(err => {
-        console.log(err)
+
         // Dispatch an action to indicate a failed email OTP send
         dispatch({ type: USER.AADHAR_VERIFY_FAILED });
 
         // Display an error message to the user
-        toast.error(err.data.message, {
+        toast.error(err.response.data.message, {
           position: toast.POSITION.BOTTOM_CENTER
         });
 

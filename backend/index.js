@@ -36,7 +36,6 @@ app.post('/signup', signupValidator, (req, res) => {
     /*doSignup function in helpers take body of the request as
     parameter and save the user data in the data base*/
 
-    console.log(req.body);
     /* checking if there is any validation error,
         -->sending error response
         -->else do signup 
@@ -45,7 +44,7 @@ app.post('/signup', signupValidator, (req, res) => {
     if (!err.isEmpty()) {
         let errors = err.array()
         // let error = JSON.stringify(errors);
-        res.status(401).json({ error:errors });
+        res.status(401).json({ error: errors });
     } else {
         helpers.doSignup(req.body).then(resp => {
             const data = JSON.stringify(resp);
@@ -138,15 +137,43 @@ app.post('/resend-phone-otp', (req, res) => {
 //Aadhar verification 
 
 app.post('/validate-aadhar', (req, res) => {
-  const { aadhar } = req.body;
-  const isUID = aadharValidator.isValidNumber(aadhar);
-  if(!isUID){
-    res.status(400).json({ message: "Invalid Aadhar number" });
-  }else{
-    res.json({ message: "Aadhar Verified" }).status(200);
-  }
+    const { aadhar } = req.body;
+    const isUID = aadharValidator.isValidNumber(aadhar);
+    if (!isUID) {
+        res.status(400).json({ message: "Invalid Aadhar number" });
+    } else {
+        res.json({ message: "Aadhar Verified" }).status(200);
+    }
 });
 
+//get user details
+
+app.post('/get-user-details', (req, res) => {
+    console.log(req.body);
+    helpers.getUserDetails(req.body).then(resp => {
+        res.json(resp).status(200);
+    }).catch(err => {
+        res.status(400).json(err);
+    })
+})
+
+//update user details 
+
+app.post('/update', signupValidator, (req, res) => {
+    const err = validationResult(req);
+    if (!err.isEmpty()) {
+        let errors = err.array()
+        // let error = JSON.stringify(errors);
+        res.status(401).json({ error: errors });
+    } else {
+        helpers.updateUserDetails(req.body).then(resp => {
+            const data = JSON.stringify(resp);
+            res.status(200).json(data);
+        }).catch(err => {
+            res.status(401).json(err);
+        });
+    }
+})
 //function to start the server
 const StartServer = (MONGODB_URL) => {
 

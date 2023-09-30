@@ -3,7 +3,7 @@ import './style.css'
 
 const Alert = ({ msg }) => {
   return (
-    <p className='alert'> *{msg} </p>
+    <p className='alert'> {msg} </p>
   )
 }
 

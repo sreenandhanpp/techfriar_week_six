@@ -5,7 +5,7 @@ import Verfy from '../../components/Verify/Verfy';
 import { maskPhone } from '../../utils/maskPhone';
 import { URL } from '../../url';
 import { USER } from '../../redux/constants/user';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import './style.css'
 import { toast } from 'react-toastify';
