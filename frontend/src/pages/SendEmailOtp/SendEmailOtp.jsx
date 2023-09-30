@@ -4,10 +4,10 @@ import { setItem } from '../../../localStorage/setItem';
 import axios from 'axios';
 import SendOtp from '../../components/SendOtp/SendOtp';
 import { URL } from '../../url';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { USER } from '../../redux/constants/user';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
 import 'react-toastify/dist/ReactToastify.css';
 import { maskEmail } from '../../utils/maskEmail';
@@ -27,7 +27,7 @@ const SendEmailOtp = () => {
     // Use the useEffect hook to process user email data and generate a masked email message.
     useEffect(() => {
         let maskedEmail = maskEmail(userData.email);
-        let text = `Click the send button to recieve otp to ${maskedEmail}`; 
+        let text = `Click the send button to recieve otp to ${maskedEmail}`;
         setMsg(text);
     }, []);
 
@@ -48,8 +48,11 @@ const SendEmailOtp = () => {
                     toast.success(res.data.message, {
                         position: toast.POSITION.BOTTOM_CENTER
                     });
+
+                    //setting sendEmail to true and update in localstorage for further validation
                     userData.sendEmail = true;
-                    setItem('user',userData);
+                    setItem('user', userData);
+
                     // Dispatch an action to indicate a successful email OTP send
                     dispatch({ type: USER.SEND_EMAIL_OTP_SUCCESS });
 
@@ -61,7 +64,7 @@ const SendEmailOtp = () => {
                 dispatch({ type: USER.SEND_EMAIL_OTP_FAILED });
 
                 // Display an error message to the user
-                toast.error(res.data.message, {
+                toast.error(err.data.message, {
                     position: toast.POSITION.BOTTOM_CENTER
                 });
 

@@ -1,5 +1,5 @@
 const userPhoneOtpSchema = require("../MongoDb/models/userModels/phoneOtp");
-const userMailOtpSchema = require("../MongoDb/models/userModels/phoneOtp");
+const userMailOtpSchema = require("../MongoDb/models/userModels/mailOtp");
 const helpers = require("./index");
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;

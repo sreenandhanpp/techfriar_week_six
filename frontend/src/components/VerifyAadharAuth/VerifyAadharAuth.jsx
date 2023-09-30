@@ -1,24 +1,24 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { getItem } from "../../../localStorage/getItem";
 import Signup from "../../pages/Signup/Signup";
 
 
-export const PhoneAuth = ({ children }) => {
+
+export const VerifyAadharAuth = ({ children }) => {
     const data = getItem('user');
     let nav = false;
 
     if (data) {
-        if (!data.sendPhone) {
+        if (data.sendPhone && data.phoneVerified) {
             return children
         } else {
             nav = true;
         }
     }
-
     return (
         <div>
             {nav ?
-                <Navigate to={'/verify-phone'} />
+                <Navigate to={'/send-phone'} />
                 :
                 <Signup />}
         </div>

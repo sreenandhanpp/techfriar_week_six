@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import PincodeInput from '../../components/PincodeInput/PincodeInput';
 import Navbar from '../../components/Navbar/Navbar';

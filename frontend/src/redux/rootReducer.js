@@ -1,12 +1,9 @@
-import { combineReducers } from 'redux'
-import { userReducer } from './reducers/signupReducer'
-import { verifyReducer } from './reducers/verifyOtp'
-import { resendOtp } from './reducers/resendOtp'
-import { pincodeReducer } from './reducers/pincodeReducer'
-import { phoneReducer } from './reducers/phoneReducer'
-import { aadharReducer } from './reducers/aadharReducer'
-import { sendOtpReducer } from './reducers/sendOtp'
-
+import { combineReducers } from 'redux';
+import { userReducer } from './reducers/signupReducer';
+import { verifyReducer } from './reducers/verifyOtp';
+import { resendOtp } from './reducers/resendOtp';
+import { pincodeReducer } from './reducers/pincodeReducer';
+import { aadharReducer } from './reducers/aadharReducer';
 
 
 
@@ -15,8 +12,6 @@ export const rootReducers = combineReducers({
     verify: verifyReducer,
     resendOtp:resendOtp,
     pincodeData: pincodeReducer,
-    phoneUserData: phoneReducer,
     aadharData: aadharReducer,
-    sendOtp: sendOtpReducer
 })
 

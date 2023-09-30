@@ -6,12 +6,15 @@ import './style.css'
 import { maskEmail } from '../../utils/maskEmail';
 import { URL } from '../../url';
 import { USER } from '../../redux/constants/user';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+import Loader from '../../components/Loader/Loader';
 
 const VerifyEmail = () => {
+  const navigate = useNavigate('');
   const [msg, setMsg] = useState('');
   const [otps, setOtps] = useState({
     digitOne: "",
@@ -21,6 +24,10 @@ const VerifyEmail = () => {
   });
   const [color, setColor] = useState('');
   const dispatch = useDispatch();
+
+  //fetching loading state from global state
+  const { loading } = useSelector(state => state.verify);
+  const resendLoading = useSelector(state => state.resendOtp.loading);
 
   // Handle changes in input fields by updating the OTP (One-Time Password) state.
   const HandleChange = (e) => {
@@ -34,19 +41,29 @@ const VerifyEmail = () => {
   //Taking data from localstorage useing getItem function
   const userData = getItem('user');
 
+  /**
+ * React useEffect hook to set a message containing a masked email for user verification.
+ * This effect runs once after component mounting.
+ */
   useEffect(() => {
+    // Mask the user's email for privacy
     let maskedEmail = maskEmail(userData.email);
     let text = `We have sent a verification code to ${maskedEmail}`;
     setMsg(text);
   }, []);
 
+  /**
+ * Validates the entered OTP (One-Time Password).
+ * Checks if the OTP is a four-digit number and updates the message and color accordingly.
+ * Returns 'true' if validation fails, 'false' otherwise.
+ */
   const HandleValidation = () => {
-    const otpRegex = /^\d{4}$/;
-    const otp = otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour;
+    const otpRegex = /^\d{4}$/; // Regular expression for a four-digit OTP
+    const otp = otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour; // Concatenate OTP digits
     if (!otpRegex.test(otp)) {
-      setColor('red');
-      setMsg("otp must be four digit,check your inbox");
-      return true;
+      setColor('red'); // Set the color to red for error
+      setMsg("otp must be four digit,check your inbox"); // Update the error message
+      return true; // Return 'true' to indicate validation failure
     }
   }
 
@@ -56,7 +73,6 @@ const VerifyEmail = () => {
     const isErr = HandleValidation();
 
     if (!isErr) {
-
       // Dispatch an action to indicate the OTP verification request is in progress
       dispatch({ type: USER.VERIFY_OTP_REQUEST });
 
@@ -66,11 +82,12 @@ const VerifyEmail = () => {
         otp: otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour
       }).then(res => {
 
+        //setting emailVerified to true and update in localstorage for further validation
         userData.emailVerified = true;
-        setItem('user',userData);
+        setItem('user', userData);
 
         // Dispatch an action to indicate a successful OTP verification
-        dispatch({ type: USER.VERIFY_OTP_SUCCESS, payload: res.data.message });
+        dispatch({ type: USER.VERIFY_OTP_SUCCESS });
 
         // Display a success message to the user
         toast.success(res.data.message, {
@@ -80,9 +97,10 @@ const VerifyEmail = () => {
         // Navigate the user to the '/send-phone' route upon successful verification
         navigate('/send-phone');
       }).catch(err => {
+        console.log(err);
 
         // Dispatch an action to indicate a failed OTP verification
-        dispatch({ type: USER.VERIFY_OTP_FAILED, error: err.response.data.message });
+        dispatch({ type: USER.VERIFY_OTP_FAILED });
 
         // Set the color to red and display an error message
         setColor('red');
@@ -111,7 +129,7 @@ const VerifyEmail = () => {
       setColor('green');
       setMsg(res.data.message);
     }).catch(err => {
-
+      console.log(err);
       // Dispatch an action to indicate a failed OTP resend
       dispatch({ type: USER.RESEND_OTP_FAILED, error: err.message });
 
@@ -123,13 +141,16 @@ const VerifyEmail = () => {
 
 
   return (
-    <Verfy
-      msg={msg}
-      color={color}
-      HandleResend={HandleResend}
-      HandleChange={HandleChange}
-      HandleVerify={HandleVerify}
-    />
+    loading || resendLoading ?
+      <Loader />
+      :
+      <Verfy
+        msg={msg}
+        color={color}
+        HandleResend={HandleResend}
+        HandleChange={HandleChange}
+        HandleVerify={HandleVerify}
+      />
   )
 }
 

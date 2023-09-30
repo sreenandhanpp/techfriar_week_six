@@ -11,6 +11,7 @@ import './style.css'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../../components/Loader/Loader';
 
 const VerifyPhone = () => {
   const [msg, setMsg] = useState('');
@@ -24,9 +25,10 @@ const VerifyPhone = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { loading } = useSelector(state => state.verify);
+  const resendLoading = useSelector(state => state.resendOtp.loading);
   // Handle changes in input fields by updating the OTP (One-Time Password) state.
   const HandleChange = (e) => {
-
 
     // Update the OTP state using the spread operator to maintain previous values
     setOtps((prev) => {
@@ -37,18 +39,28 @@ const VerifyPhone = () => {
   //Taking data from localstorage useing getItem function
   const userData = getItem('user');
 
+  /**
+ * React useEffect hook to set a message containing a masked phone number for user verification.
+ * This effect runs once after component mounting.
+ */
   useEffect(() => {
+    // Mask the user's phone number for privacy
     let maskedPhone = maskPhone(userData.phone);
     let text = `We have sent a verification code to ${maskedPhone}`;
     setMsg(text);
   }, []);
 
+  /**
+ * Validates the entered OTP (One-Time Password).
+ * Checks if the OTP is a four-digit number and updates the message accordingly.
+ * Returns 'true' if validation fails, 'false' otherwise.
+ */
   const HandleValidation = () => {
-    const otpRegex = /^\d{4}$/;
-    const otp = otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour;
+    const otpRegex = /^\d{4}$/; // Regular expression for a four-digit OTP
+    const otp = otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour; // Concatenate OTP digits
     if (!otpRegex.test(otp)) {
-      setMsg("otp must be four digit,check your inbox");
-      return true;
+      setMsg("otp must be four digit,check your inbox"); // Update the error message
+      return true; // Return 'true' to indicate validation failure
     }
   }
   // Handle the user's request to verify an OTP (One-Time Password) for phone.
@@ -57,7 +69,6 @@ const VerifyPhone = () => {
     const isErr = HandleValidation();
 
     if (!isErr) {
-
       // Dispatch an action to indicate the OTP verification request is in progress
       dispatch({ type: USER.VERIFY_OTP_REQUEST });
 
@@ -67,6 +78,7 @@ const VerifyPhone = () => {
         otp: otps.digitOne + otps.digitTwo + otps.digitThree + otps.digitFour
       }).then(res => {
 
+        //setting phoneVerified to true and update in localstorage for further validation
         userData.phoneVerified = true;
         setItem('user', userData);
 
@@ -79,9 +91,9 @@ const VerifyPhone = () => {
         });
 
         // Navigate the user to the '/send-aadhar' route upon successful verification
-        navigate('/send-aadhar');
+        navigate('/verify-aadhar');
       }).catch(err => {
-        console.log(err)
+
         // Dispatch an action to indicate a failed OTP verification
         dispatch({ type: USER.VERIFY_OTP_FAILED, error: err.response.data.message });
 
@@ -124,13 +136,16 @@ const VerifyPhone = () => {
 
 
   return (
-    <Verfy
-      msg={msg}
-      color={color}
-      HandleResend={HandleResend}
-      HandleChange={HandleChange}
-      HandleVerify={HandleVerify}
-    />
+    loading || resendLoading ?
+      <Loader />
+      :
+      <Verfy
+        msg={msg}
+        color={color}
+        HandleResend={HandleResend}
+        HandleChange={HandleChange}
+        HandleVerify={HandleVerify}
+      />
   )
 }
 

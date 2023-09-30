@@ -1,7 +1,6 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { getItem } from "../../../localStorage/getItem";
 import Signup from "../../pages/Signup/Signup";
-import { useEffect, useState } from "react";
 
 
 export const VerifyEmailAuth = ({ children }) => {

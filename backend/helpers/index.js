@@ -105,7 +105,7 @@ module.exports = {
                     await userMailOtpSchema.deleteOne({ userId: new ObjectId(id) });
                     reject("Code has expired. Please request again");
                 } else {
-                    validOtp = await bcrypt.compare(otp, hashedOtp);
+                    const validOtp = await bcrypt.compare(otp, hashedOtp);
                     if (!validOtp) {
                         reject("Invalid code please check your inbox");
                     } else {
