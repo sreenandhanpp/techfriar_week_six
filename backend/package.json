@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
+    "build": "npm i",
     "start": "nodemon index.js"
   },
   "author": "Sreenandhan P P",
