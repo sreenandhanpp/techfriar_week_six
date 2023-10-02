@@ -3,7 +3,7 @@ import { getItem } from '../../../localStorage/getItem';
 import { setItem } from '../../../localStorage/setItem';
 import Verfy from '../../components/Verify/Verfy';
 import { maskPhone } from '../../utils/maskPhone';
-import { URL } from '../../url';
+import { URL } from '../../utils/url';
 import { USER } from '../../redux/constants/user';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';

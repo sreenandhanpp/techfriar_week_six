@@ -205,11 +205,25 @@ module.exports = {
                     email: email,
                 }
             }).then((res) => {
+                console.log(res);
                 resovle(res);
             }).catch(err => {
                 reject(err)
             })
         });
     },
+
+    //clear database
+    clearDatabase: () => {
+        return new Promise((resolve,reject) => {
+            newUser.deleteMany().then(res=>{
+                if(res.acknowledged){
+                    resolve(true);
+                }else{
+                    reject(false);
+                }
+            })
+        });
+    }
 
 }

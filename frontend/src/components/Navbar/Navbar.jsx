@@ -1,8 +1,18 @@
-import React from 'react'
-import './style.css'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import './style.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { clearStorage } from '../../../localStorage/clearStorage';
+import { URL } from '../../utils/url';
+import axios from 'axios';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
+  const HandleClear = async () => {
+    clearStorage();
+    await axios.get(URL+'/clear');
+    navigate('/signup');
+  }
   return (
     <div>
          <nav className="navbar">
@@ -14,10 +24,7 @@ const Navbar = () => {
                 <span className="line line3"></span>
             </div>
             <ul className="menu-items">
-                <li><Link href="#">Home</Link></li>
-                <li><Link href="#">Signup</Link></li>
-                <li><Link href="#">Login</Link></li>
-                <li><Link href="#">Username</Link></li>
+                <li><Link onClick={HandleClear}>Clear data</Link></li>
             </ul>
             <h1 className="logo">Hi,</h1>
         </div>

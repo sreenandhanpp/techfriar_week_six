@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getItem } from '../../../localStorage/getItem'
 import axios from 'axios';
 import SendOtp from '../../components/SendOtp/SendOtp';
-import { URL } from '../../url';
+import { URL } from '../../utils/url';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { USER } from '../../redux/constants/user';

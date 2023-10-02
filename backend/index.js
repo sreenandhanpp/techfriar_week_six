@@ -150,6 +150,7 @@ app.get('/getAadhar', async (req, res) => {
 
 app.post('/validate-aadhar', async (req, res) => {
     const { aadhar } = req.body;
+    console.log(aadhar);
     const encodedParams = new URLSearchParams();
     encodedParams.set('txn_id', '17c6fa41-778f-49c1-a80a-cfaf7fae2fb8');
     encodedParams.set('consent', 'Y');
@@ -169,7 +170,7 @@ app.post('/validate-aadhar', async (req, res) => {
 
     try {
         const response = await axios.request(options);
-        if (response.data.Succeeded.Uid_Details.Data.status == 'Success') {
+        if (response.data.Succeeded.Verify_status === 'Uid is Valid') {
             res.json({ message: "Aadhar number verified" }).status(200);
         } else {
             res.status(400).json({ message: "Invalid Aadhar number" });
@@ -191,22 +192,14 @@ app.post('/get-user-details', (req, res) => {
     })
 })
 
-//update user details 
 
-app.post('/update', signupValidator, (req, res) => {
-    const err = validationResult(req);
-    if (!err.isEmpty()) {
-        let errors = err.array()
-        // let error = JSON.stringify(errors);
-        res.status(401).json({ error: errors });
-    } else {
-        helpers.updateUserDetails(req.body).then(resp => {
-            const data = JSON.stringify(resp);
-            res.status(200).json(data);
-        }).catch(err => {
-            res.status(401).json(err);
-        });
-    }
+//clear database
+app.get('/clear', signupValidator, (req, res) => {
+    helpers.clearDatabase().then(resp => {
+        res.status(200).json(true);
+    }).catch(err => {
+        res.status(400).json(false);
+    })
 })
 //function to start the server
 const StartServer = (MONGODB_URL) => {

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import InuptField from '../../components/InuptField/InuptField';
 import { useNavigate } from "react-router-dom";
-import { URL } from '../../url';
+import { URL } from '../../utils/url';
 import { USER } from '../../redux/constants/user';
 import './style.css';
 import Loader from '../../components/Loader/Loader';

@@ -4,7 +4,7 @@ import { setItem } from '../../../localStorage/setItem';
 import Verfy from '../../components/Verify/Verfy';
 import './style.css'
 import { maskEmail } from '../../utils/maskEmail';
-import { URL } from '../../url';
+import { URL } from '../../utils/url';
 import { USER } from '../../redux/constants/user';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -128,7 +128,7 @@ const VerifyEmail = () => {
       setColor('green');
       setMsg(res.data.message);
     }).catch(err => {
-      
+
       // Dispatch an action to indicate a failed OTP resend
       dispatch({ type: USER.RESEND_OTP_FAILED, error: err.message });
 
