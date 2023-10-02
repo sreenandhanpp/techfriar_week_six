@@ -8,7 +8,6 @@ const helpers = require('./helpers/index.js');
 const { resendEmailOtp, resendPhoneOtp } = require('./helpers/resendOtp.js');
 const signupValidator = require('./middlewares/signupValidator.js');
 const { validationResult } = require('express-validator');
-const axios = require('axios');
 
 
 
