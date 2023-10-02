@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 app.get('*', (req, res) =>
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
 );
 
 //creating user route
@@ -144,12 +144,14 @@ app.post('/resend-phone-otp', (req, res) => {
 app.post('/validate-aadhar', async (req, res) => {
     const { aadhar } = req.body;
     console.log(aadhar);
+
     const encodedParams = new URLSearchParams();
     encodedParams.set('txn_id', '17c6fa41-778f-49c1-a80a-cfaf7fae2fb8');
     encodedParams.set('consent', 'Y');
     encodedParams.set('uidnumber', aadhar);
     encodedParams.set('clientid', '222');
     encodedParams.set('method', 'uidvalidatev2');
+
     const options = {
         method: 'POST',
         url: 'https://verifyaadhaarnumber.p.rapidapi.com/Uidverifywebsvcv1/VerifyAadhaarNumber',
@@ -166,10 +168,11 @@ app.post('/validate-aadhar', async (req, res) => {
         if (response.data.Succeeded.Verify_status === 'Uid is Valid') {
             res.json({ message: "Aadhar number verified" }).status(200);
         } else {
-            res.status(400).json({ message: "Invalid Aadhar number" });
+            console.log("err")
+            res.status(200).json({ message: "Invalid Aadhar number" });
         }
     } catch (error) {
-        res.status(400).json({ message: "Invalid Aadhar number" });
+        res.status(200).json({ message: "Invalid Aadhar number" });
 
     }
 
