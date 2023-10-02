@@ -124,7 +124,7 @@ const VerifyPhone = () => {
       setColor('green');
       setMsg(res.data.message);
     }).catch(err => {
-      console.log(err)
+
       // Dispatch an action to indicate a failed OTP resend
       dispatch({ type: USER.RESEND_OTP_FAILED, error: err.message });
 

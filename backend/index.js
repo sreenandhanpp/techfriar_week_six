@@ -9,6 +9,7 @@ const { resendEmailOtp, resendPhoneOtp } = require('./helpers/resendOtp.js');
 const signupValidator = require('./middlewares/signupValidator.js');
 const { validationResult } = require('express-validator');
 const aadharValidator = require('aadhaar-validator');
+const axios = require('axios');
 
 
 
@@ -116,7 +117,6 @@ app.post('/verify-phone-otp', (req, res) => {
 
 //resending email otp route
 app.post('/resend-email-otp', (req, res) => {
-    console.log(req.body)
     resendEmailOtp(req.body).then(resp => {
         res.json({ message: resp }).status(200);
     }).catch(err => {
@@ -126,7 +126,6 @@ app.post('/resend-email-otp', (req, res) => {
 
 //resending phone otp route
 app.post('/resend-phone-otp', (req, res) => {
-    console.log(req.body)
     resendPhoneOtp(req.body).then(resp => {
         res.json({ message: resp }).status(200);
     }).catch(err => {
@@ -136,20 +135,55 @@ app.post('/resend-phone-otp', (req, res) => {
 
 //Aadhar verification 
 
-app.post('/validate-aadhar', (req, res) => {
+//get adhaar details
+
+
+
+app.get('/getAadhar', async (req, res) => {
+
+
+
+
+
+})
+
+
+app.post('/validate-aadhar', async (req, res) => {
     const { aadhar } = req.body;
-    const isUID = aadharValidator.isValidNumber(aadhar);
-    if (!isUID) {
+    const encodedParams = new URLSearchParams();
+    encodedParams.set('txn_id', '17c6fa41-778f-49c1-a80a-cfaf7fae2fb8');
+    encodedParams.set('consent', 'Y');
+    encodedParams.set('uidnumber', aadhar);
+    encodedParams.set('clientid', '222');
+    encodedParams.set('method', 'uidvalidatev2');
+    const options = {
+        method: 'POST',
+        url: 'https://verifyaadhaarnumber.p.rapidapi.com/Uidverifywebsvcv1/VerifyAadhaarNumber',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            'X-RapidAPI-Key': '3517e41e7dmsh05ec40135f0c319p199618jsn968586f74100',
+            'X-RapidAPI-Host': 'verifyaadhaarnumber.p.rapidapi.com'
+        },
+        data: encodedParams,
+    };
+
+    try {
+        const response = await axios.request(options);
+        if (response.data.Succeeded.Uid_Details.Data.status == 'Success') {
+            res.json({ message: "Aadhar number verified" }).status(200);
+        } else {
+            res.status(400).json({ message: "Invalid Aadhar number" });
+        }
+    } catch (error) {
         res.status(400).json({ message: "Invalid Aadhar number" });
-    } else {
-        res.json({ message: "Aadhar Verified" }).status(200);
+
     }
+
 });
 
 //get user details
 
 app.post('/get-user-details', (req, res) => {
-    console.log(req.body);
     helpers.getUserDetails(req.body).then(resp => {
         res.json(resp).status(200);
     }).catch(err => {

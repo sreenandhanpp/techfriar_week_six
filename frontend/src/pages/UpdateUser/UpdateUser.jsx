@@ -203,7 +203,6 @@ const UpdateUser = () => {
     }
 
     useEffect(() => {
-        console.log(userData);
         axios.post(URL + '/get-user-details', {
             id: userData.id
         }).then(res => {

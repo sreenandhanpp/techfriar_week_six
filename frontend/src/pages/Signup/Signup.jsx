@@ -11,11 +11,6 @@ import { toast } from 'react-toastify';
 
 
 const Signup = () => {
-  const [isExist, setIsExist] = useState({
-    email: '',
-    aadhar: '',
-    phone: ''
-  });
   const [errors, setErrors] = useState({
     name: '',
     email: '',

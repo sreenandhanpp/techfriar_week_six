@@ -92,13 +92,11 @@ module.exports = {
         -->else resolve : Account verified successfully.
     */
     VerifyEmailOtp: ({ id, otp }) => {
-        console.log(id, otp)
         return new Promise(async (resolve, reject) => {
             const user = await userMailOtpSchema.findOne({ userId: new ObjectId(id) });
             if (!user) {
                 reject("User not found");
             } else {
-                // console.log(isAuth);
                 const { expiresAt } = user.expiresAt;
                 const hashedOtp = user.otp;
                 if (expiresAt < Date.now()) {
@@ -150,7 +148,6 @@ module.exports = {
                 resolve("Otp sended successfully");
             } catch (error) {
                 reject("Something went wrong,Request another OTP")
-                console.log(error);
             }
         })
     },
@@ -163,13 +160,11 @@ module.exports = {
         -->else resolve : Account verified successfully.
     */
     VerifyPhoneOtp: ({ id, otp }) => {
-        console.log(id, otp)
         return new Promise(async (resolve, reject) => {
             const user = await userPhoneOtpSchema.findOne({ userId: new ObjectId(id) });
             if (!user) {
                 reject("User not found");
             } else {
-                // console.log(isAuth);
                 const { expiresAt } = user.expiresAt;
                 const hashedOtp = user.otp;
                 if (expiresAt < Date.now()) {

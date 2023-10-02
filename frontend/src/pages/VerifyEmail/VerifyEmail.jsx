@@ -97,7 +97,6 @@ const VerifyEmail = () => {
         // Navigate the user to the '/send-phone' route upon successful verification
         navigate('/send-phone');
       }).catch(err => {
-        console.log(err);
 
         // Dispatch an action to indicate a failed OTP verification
         dispatch({ type: USER.VERIFY_OTP_FAILED });
@@ -129,7 +128,7 @@ const VerifyEmail = () => {
       setColor('green');
       setMsg(res.data.message);
     }).catch(err => {
-      console.log(err);
+      
       // Dispatch an action to indicate a failed OTP resend
       dispatch({ type: USER.RESEND_OTP_FAILED, error: err.message });
 
