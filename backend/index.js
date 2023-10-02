@@ -8,7 +8,6 @@ const helpers = require('./helpers/index.js');
 const { resendEmailOtp, resendPhoneOtp } = require('./helpers/resendOtp.js');
 const signupValidator = require('./middlewares/signupValidator.js');
 const { validationResult } = require('express-validator');
-const aadharValidator = require('aadhaar-validator');
 const axios = require('axios');
 
 
@@ -134,18 +133,6 @@ app.post('/resend-phone-otp', (req, res) => {
 });
 
 //Aadhar verification 
-
-//get adhaar details
-
-
-
-app.get('/getAadhar', async (req, res) => {
-
-
-
-
-
-})
 
 
 app.post('/validate-aadhar', async (req, res) => {
