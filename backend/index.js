@@ -8,7 +8,7 @@ const helpers = require('./helpers/index.js');
 const { resendEmailOtp, resendPhoneOtp } = require('./helpers/resendOtp.js');
 const signupValidator = require('./middlewares/signupValidator.js');
 const { validationResult } = require('express-validator');
-
+const path = require('path');
 
 
 //compiling .env file
@@ -26,6 +26,13 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, '/frontend/build')));
+app.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, '/frontend/build/index.html'))
+);
 
 //creating user route
 
